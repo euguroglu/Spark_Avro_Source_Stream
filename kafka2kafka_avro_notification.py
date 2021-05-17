@@ -35,24 +35,25 @@ if __name__ == "__main__":
 
 
 
-    # kafka_target_df = rewards_df.select(expr("value.CustomerCardNo as key"),
-    #                                     to_json(struct("TotalPurchase", "AggregatedRewards")).alias("value"))
+    kafka_target_df = rewards_df.select(expr("CustomerCardNo as key"),
+                                        to_json(struct("TotalPurchase", "AggregatedRewards")).alias("value"))
 
     rewards_df.printSchema()
+    # Alternative statement for kafka target
     # kafka_target_df = rewards_df.selectExpr("value.CustomerCardNo as key",
     #                                                                 "to_json(struct(*)) as value")
 
 
     # kafka_target_df.show(truncate=False)
 
-    # rewards_writer_query = kafka_target_df \
-    #     .writeStream \
-    #     .queryName("Rewards Writer") \
-    #     .format("kafka") \
-    #     .option("kafka.bootstrap.servers", "localhost:9092") \
-    #     .option("topic", "customer-rewards") \
-    #     .outputMode("update") \
-    #     .option("checkpointLocation", "KafkaAvro/chk-point-dir") \
-    #     .start()
-    #
-    # rewards_writer_query.awaitTermination()
+    rewards_writer_query = kafka_target_df \
+        .writeStream \
+        .queryName("Rewards Writer") \
+        .format("kafka") \
+        .option("kafka.bootstrap.servers", "localhost:9092") \
+        .option("topic", "customer-rewards") \
+        .outputMode("update") \
+        .option("checkpointLocation", "KafkaAvro/chk-point-dir") \
+        .start()
+
+    rewards_writer_query.awaitTermination()
