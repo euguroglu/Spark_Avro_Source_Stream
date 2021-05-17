@@ -23,13 +23,15 @@ if __name__ == "__main__":
 
     value_df = kafka_source_df.select(from_avro(col("value"), avroSchema).alias("value"))
 
+    value_df.printSchema()
+
     rewards_df = value_df.filter("value.CustomerType == 'PRIME'") \
         .groupBy("value.CustomerCardNo") \
         .agg(sum("value.TotalValue").alias("TotalPurchase"),
              sum(expr("value.TotalValue * 0.2").cast("integer")).alias("AggregatedRewards"))
 
-    rewards_df = rewards_df.withColumn("CustomerCardNo", expr(" value.CustomerCardNo")) \
-                           .drop(" value.CustomerCardNo")
+    rewards_df = rewards_df.withColumn("CustomerCardNo", expr("value.CustomerCardNo")) \
+                           .drop("value.CustomerCardNo")
 
 
 
