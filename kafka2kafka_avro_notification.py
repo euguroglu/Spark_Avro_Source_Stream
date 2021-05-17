@@ -28,8 +28,8 @@ if __name__ == "__main__":
         .agg(sum("value.TotalValue").alias("TotalPurchase"),
              sum(expr("value.TotalValue * 0.2").cast("integer")).alias("AggregatedRewards"))
 
-    rewards_df = rewards_df.withColumn("CustomerCardNo", expr("value.CustomerCardNo")) \
-                           .drop("value.CustomerCardNo")
+    rewards_df = rewards_df.withColumn("CustomerCardNo", expr(" value.CustomerCardNo")) \
+                           .drop(" value.CustomerCardNo")
 
 
 
