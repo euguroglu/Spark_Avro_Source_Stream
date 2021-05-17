@@ -28,7 +28,7 @@ if __name__ == "__main__":
         .agg(sum("value.TotalValue").alias("TotalPurchase"),
              sum(expr("value.TotalValue * 0.2").cast("integer")).alias("AggregatedRewards"))
 
-    kafka_target_df = rewards_df.select(expr("CustomerCardNo as key"),
+    kafka_target_df = rewards_df.select(expr("value.CustomerCardNo as key"),
                                         to_json(struct("TotalPurchase", "AggregatedRewards")).alias("value"))
 
     # kafka_target_df.show(truncate=False)
